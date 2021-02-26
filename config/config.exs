@@ -22,6 +22,10 @@ config :serna_pay, SernaPay.Repo,
   migration_primary_key: [type: :binary_id],
   migration_foreign_key: [type: :binary_id]
 
+config :serna_pay, :basic_auth,
+  username: "sernajoto",
+  password: "123456"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

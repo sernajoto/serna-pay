@@ -1,8 +1,14 @@
 defmodule SernaPayWeb.Router do
   use SernaPayWeb, :router
 
+  import Plug.BasicAuth
+
   pipeline :api do
     plug :accepts, ["json"]
+  end
+
+  pipeline :auth do
+    plug :basic_auth, Application.compile_env(:serna_pay, :basic_auth)
   end
 
   scope "/api", SernaPayWeb do
@@ -11,6 +17,10 @@ defmodule SernaPayWeb.Router do
     get "/:filename", WelcomeController, :index
 
     post "/users", UsersController, :create
+  end
+
+  scope "/api", SernaPayWeb do
+    pipe_through [:api, :auth]
 
     post "/accounts/:id/deposit", AccountsController, :deposit
     post "/accounts/:id/withdraw", AccountsController, :withdraw
