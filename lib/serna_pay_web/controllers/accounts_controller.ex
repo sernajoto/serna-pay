@@ -23,7 +23,9 @@ defmodule SernaPayWeb.AccountsController do
   end
 
   def transaction(conn, params) do
-    with {:ok, %TransactionResponse{} = transaction} <- SernaPay.transaction(params) do
+    task = Task.async(fn -> SernaPay.transaction(params) end)
+
+    with {:ok, %TransactionResponse{} = transaction} <- Task.await(task) do
       conn
       |> put_status(:ok)
       |> render("transaction.json", transaction: transaction)
